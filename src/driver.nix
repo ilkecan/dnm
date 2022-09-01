@@ -1,7 +1,7 @@
 {
+  alacarte,
   internal,
   lib,
-  nix-utils,
   ...
 }:
 
@@ -14,7 +14,7 @@ let
     pipe
   ;
 
-  inherit (nix-utils)
+  inherit (alacarte)
     filesOf
   ;
 

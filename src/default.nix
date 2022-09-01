@@ -1,26 +1,26 @@
 {
   inputs,
+  alacarte ? inputs.nix-alacarte.lib,
   lib ? inputs.nixpkgs.lib,
-  nix-utils ? inputs.nix-utils.lib,
 }@args:
 
 let
-  inherit (nix-utils)
+  inherit (alacarte)
     mergeLibFiles
   ;
 
   args' = args // {
     inherit
+      alacarte
       lib
-      nix-utils
 
       dnm
       internal
     ;
   };
 
-  internal = import ./internal args';
   dnm = mergeLibFiles ./. args' { };
+  internal = import ./internal args';
 in
 
 dnm

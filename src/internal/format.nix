@@ -1,6 +1,6 @@
 {
+  alacarte,
   lib,
-  nix-utils,
   ...
 }:
 
@@ -10,7 +10,7 @@ let
     mapAttrsToList
   ;
 
-  inherit (nix-utils)
+  inherit (alacarte)
     indentBy
     pipe'
     unlines

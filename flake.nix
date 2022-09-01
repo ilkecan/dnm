@@ -1,8 +1,8 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-22.05";
-    nix-utils = {
-      url = "github:ilkecan/nix-utils";
+    nix-alacarte = {
+      url = "github:ilkecan/nix-alacarte";
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };

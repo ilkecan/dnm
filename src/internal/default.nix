@@ -1,10 +1,10 @@
 {
-  nix-utils,
+  alacarte,
   ...
 }@args:
 
 let
-  inherit (nix-utils)
+  inherit (alacarte)
     mergeLibFiles
   ;
 in
