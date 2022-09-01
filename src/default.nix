@@ -1,5 +1,5 @@
 {
-  inputs,
+  inputs ? assert false; "must be called with either 'inputs' or all of [ 'lib' 'nix-alacarte' ]",
 
   lib ? inputs.nixpkgs.lib,
   nix-alacarte ? inputs.nix-alacarte.lib,
