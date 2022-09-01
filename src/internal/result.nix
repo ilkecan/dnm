@@ -1,5 +1,5 @@
 {
-  internal,
+  dnm,
   lib,
   nix-alacarte,
   ...
@@ -22,7 +22,7 @@ let
     sum
   ;
 
-  inherit (internal)
+  inherit (dnm.internal)
     fmtTestCase
     fmtTestGroup
     isTestCase

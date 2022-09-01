@@ -14,10 +14,9 @@ let
     inherit
       lib
       nix-alacarte
-
-      dnm
-      internal
     ;
+
+    dnm = dnm // { inherit internal; };
   };
 
   dnm = mergeLibFiles ./. args' { };

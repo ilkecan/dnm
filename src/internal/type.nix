@@ -1,5 +1,5 @@
 {
-  internal,
+  dnm,
   lib,
   ...
 }:
@@ -9,7 +9,7 @@ let
     isType
   ;
 
-  inherit (internal)
+  inherit (dnm.internal)
     testCaseType
   ;
 in

@@ -1,6 +1,5 @@
 {
   dnm,
-  internal,
   ...
 }:
 
@@ -14,7 +13,7 @@ let
     assertValue
   ;
 
-  inherit (internal)
+  inherit (dnm.internal)
     testCaseType
   ;
 in

@@ -1,5 +1,5 @@
 {
-  internal,
+  dnm,
   lib,
   nix-alacarte,
   ...
@@ -18,7 +18,7 @@ let
     filesOf
   ;
 
-  inherit (internal)
+  inherit (dnm.internal)
     getTestGroupResult
   ;
 in
