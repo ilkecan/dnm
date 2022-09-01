@@ -1,18 +1,19 @@
 {
   inputs,
-  alacarte ? inputs.nix-alacarte.lib,
+
   lib ? inputs.nixpkgs.lib,
+  nix-alacarte ? inputs.nix-alacarte.lib,
 }@args:
 
 let
-  inherit (alacarte)
+  inherit (nix-alacarte)
     mergeLibFiles
   ;
 
   args' = args // {
     inherit
-      alacarte
       lib
+      nix-alacarte
 
       dnm
       internal
