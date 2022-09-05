@@ -25,7 +25,6 @@ let
 
   inherit (dnm.internal)
     fmtCounter
-    fmtTestCase
     fmtTestList
     fmtTestSet
     isTestCase
@@ -34,7 +33,7 @@ let
 
   getTestCaseResult = name: test:
     {
-      str = "${name} ${fmtTestCase test}";
+      str = "${name} ${test.fmt}";
       stats = {
         passed = boolToInt test.passed;
         total = 1;

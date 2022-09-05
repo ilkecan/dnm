@@ -20,16 +20,39 @@ in
 
 {
   assertEqual = { actual, expected }:
-    {
-      inherit actual expected;
-      _type = testCaseType;
+    let
       passed = actual == expected;
+    in
+    {
+      inherit passed;
+      _type = testCaseType;
+      fmt =
+        if passed then
+          "passed!"
+        else
+          ''
+            failed:
+              actual: ${builtins.toJSON actual}
+              expected: ${builtins.toJSON expected}''
+        ;
     };
 
   assertFailure = expression:
-    assertEqual {
-      actual = tryEval expression;
-      expected = { success = false; value = false; };
+    let
+      ret = tryEval expression;
+      passed = !ret.success;
+    in
+    {
+      inherit passed;
+      _type = testCaseType;
+      fmt =
+        if passed then
+          "passed!"
+        else
+          ''
+            failed:
+              expected an error but got the value: ${builtins.toJSON ret.value}''
+        ;
     };
 
   assertFalse = assertValue false;
