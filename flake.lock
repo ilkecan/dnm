@@ -65,11 +65,11 @@
         "overlayln": "overlayln"
       },
       "locked": {
-        "lastModified": 1662393417,
-        "narHash": "sha256-sgEtkTd2oZxCWW0axCCr3zLDDLwLSnRcW3JwNd+Bl0Y=",
+        "lastModified": 1662403214,
+        "narHash": "sha256-bq47ji94RUk4L4VsOaQYBYx1t/StQoTPXtlkCNtKkh0=",
         "owner": "ilkecan",
         "repo": "nix-alacarte",
-        "rev": "6aaffb35a608edeeba6be1b3460a7b15dd446905",
+        "rev": "fb072a43b883d9d98be205c1b0ebe15fb8d5ccb2",
         "type": "github"
       },
       "original": {

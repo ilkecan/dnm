@@ -19,6 +19,7 @@ let
   ;
 
   inherit (dnm.internal)
+    fmtTestResult
     getTestSetResult
   ;
 in
@@ -46,10 +47,8 @@ in
       ];
     in
     ''
-      ${testResults.str}
+      ${testResults.fmt}
 
-      test result:
-        ${toString testResults.stats.passed} passed
-        ${toString (testResults.stats.total - testResults.stats.passed)} failed
+      ${fmtTestResult testResults.stats}
     '';
 }

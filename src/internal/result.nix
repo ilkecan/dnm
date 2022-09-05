@@ -13,6 +13,7 @@ let
   ;
 
   inherit (lib)
+    imap1
     isList
     mapAttrsToList
     pipe
@@ -33,7 +34,7 @@ let
 
   getTestCaseResult = name: test:
     {
-      str = "${name} ${test.fmt}";
+      fmt = if name == null then test.fmt else "${name} ${test.fmt}";
       stats = {
         passed = boolToInt test.passed;
         total = 1;
@@ -42,7 +43,7 @@ let
 
   getTestListResult = name: list:
     let
-      testListResults = map (getTestCaseResult "-") list;
+      testListResults = imap1 (i: getTestCaseResult "${toString i}.") list;
       stats = pipe testListResults [
         (map (getAttr "stats"))
         (zipAttrsWith (_: sum))
@@ -50,7 +51,7 @@ let
       header = "${name} ${fmtCounter stats}";
     in
     {
-      str =
+      fmt =
         if list == [ ] then
           header
         else
@@ -78,7 +79,7 @@ in
         header = "${name} ${fmtCounter stats}";
       in
       {
-        str =
+        fmt =
           if value == { } then
             header
           else
