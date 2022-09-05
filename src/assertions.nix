@@ -12,12 +12,14 @@ let
   ;
 
   inherit (lib)
-    pipe
     imap1
+    isFunction
+    pipe
   ;
 
   inherit (nix-alacarte)
     addPrefix
+    compose
     indentBy
   ;
 
@@ -37,6 +39,13 @@ let
       _type = testCaseType;
       fmt = if passed then "passed!" else "failed!${failureMessage}";
     };
+
+  assertBool = bool: value:
+    if isFunction value then
+      compose [ (assertBool bool) value ]
+    else
+      assertValue bool value
+    ;
 in
 
 {
@@ -78,9 +87,10 @@ in
         " expected an error but got the value: ${builtins.toJSON ret.value}";
     };
 
-  assertFalse = assertValue false;
+  assertFalse = assertBool false;
+  assertTrue = assertBool true;
+
   assertNull = assertValue null;
-  assertTrue = assertValue true;
 
   assertValue = value: expression:
     assertEqual { actual = expression; expected = value; };
