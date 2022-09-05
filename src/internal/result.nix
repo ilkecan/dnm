@@ -13,6 +13,7 @@ let
   ;
 
   inherit (lib)
+    isList
     mapAttrsToList
     pipe
   ;
@@ -23,13 +24,15 @@ let
   ;
 
   inherit (dnm.internal)
+    fmtCounter
     fmtTestCase
-    fmtTestGroup
+    fmtTestList
+    fmtTestSet
     isTestCase
-    getTestGroupResult
+    getTestSetResult
   ;
 
-  getTestResult = name: test:
+  getTestCaseResult = name: test:
     {
       str = "${name} ${fmtTestCase test}";
       stats = {
@@ -37,25 +40,53 @@ let
         total = 1;
       };
     };
+
+  getTestListResult = name: list:
+    let
+      testListResults = map (getTestCaseResult "-") list;
+      stats = pipe testListResults [
+        (map (getAttr "stats"))
+        (zipAttrsWith (_: sum))
+      ];
+      header = "${name} ${fmtCounter stats}";
+    in
+    {
+      str =
+        if list == [ ] then
+          header
+        else
+          ''
+            ${header}
+            ${fmtTestList testListResults}''
+        ;
+      inherit stats;
+    };
 in
 
 {
-  getTestGroupResult = name: set:
-    if isTestCase set then
-      getTestResult name set
+  getTestSetResult = name: value:
+    if isList value then
+      getTestListResult name value
+    else if isTestCase value then
+      getTestCaseResult name value
     else
       let
-        testGroupResults = mapAttrs getTestGroupResult set;
-        stats = pipe testGroupResults [
+        testSetResults = mapAttrs getTestSetResult value;
+        stats = pipe testSetResults [
           (mapAttrsToList (_: getAttr "stats"))
           (zipAttrsWith (_: sum))
         ];
-        counter = "[${toString stats.passed}/${toString stats.total}]";
+        header = "${name} ${fmtCounter stats}";
       in
       {
-        str = ''
-          ${name} ${counter}
-          ${fmtTestGroup testGroupResults}'';
+        str =
+          if value == { } then
+            header
+          else
+            ''
+              ${header}
+              ${fmtTestSet testSetResults}''
+          ;
         inherit stats;
       }
     ;

@@ -19,7 +19,7 @@ let
   ;
 
   inherit (dnm.internal)
-    getTestGroupResult
+    getTestSetResult
   ;
 in
 
@@ -42,7 +42,7 @@ in
       };
       testResults = pipe files [
         (mapAttrs (_: importTest))
-        (getTestGroupResult name)
+        (getTestSetResult name)
       ];
     in
     ''
