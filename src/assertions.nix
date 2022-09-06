@@ -39,13 +39,6 @@ let
       _type = testCaseType;
       fmt = if passed then "passed!" else "failed!${failureMessage}";
     };
-
-  assertBool = bool: value:
-    if isFunction value then
-      compose [ (assertBool bool) value ]
-    else
-      assertValue bool value
-    ;
 in
 
 {
@@ -87,11 +80,19 @@ in
         " expected an error but got the value: ${builtins.toJSON ret.value}";
     };
 
-  assertFalse = assertBool false;
-  assertTrue = assertBool true;
+  assertFalse = assertValue false;
+  assertTrue = assertValue true;
 
   assertNull = assertValue null;
 
-  assertValue = value: expression:
-    assertEqual { actual = expression; expected = value; };
+  assertValue = value:
+    let
+      f = expression:
+        if isFunction expression then
+          compose [ f expression ]
+        else
+          assertEqual { actual = expression; expected = value; }
+        ;
+    in
+    f;
 }
