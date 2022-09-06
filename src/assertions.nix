@@ -71,14 +71,22 @@ in
 
   assertFailure = expression:
     let
-      ret = tryEval expression;
-      passed = !ret.success;
+      f = { expression, ... }:
+        let
+          ret = tryEval expression;
+          passed = !ret.success;
+        in
+        mkTestCase {
+          inherit passed;
+          failureMessage =
+            " expected an error but got the value: ${builtins.toJSON ret.value}";
+        } // {
+          inherit expression;
+          __functor = self: arg:
+            f { expression = self.expression arg; };
+        };
     in
-    mkTestCase {
-      inherit passed;
-      failureMessage =
-        " expected an error but got the value: ${builtins.toJSON ret.value}";
-    };
+    f { inherit expression; };
 
   assertFalse = assertValue false;
   assertTrue = assertValue true;
