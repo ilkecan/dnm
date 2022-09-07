@@ -5,6 +5,7 @@
       url = "github:ilkecan/nix-alacarte";
       inputs = {
         nixpkgs.follows = "nixpkgs";
+        dnm.follows = "";
       };
     };
   };
