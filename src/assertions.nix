@@ -17,6 +17,10 @@ let
     pipe
   ;
 
+  inherit (lib.generators)
+    toPretty
+  ;
+
   inherit (nix-alacarte)
     addPrefix
     compose
@@ -33,6 +37,7 @@ let
     testCaseType
   ;
 
+  toPretty' = toPretty { };
   mkTestCase = { passed, failureMessage }:
     {
       inherit passed;
@@ -65,8 +70,8 @@ in
     mkTestCase {
       inherit passed;
       failureMessage = addPrefix "\n" (indentBy 2 ''
-        actual: ${builtins.toJSON actual}
-        expected: ${builtins.toJSON expected}'');
+        actual: ${toPretty' actual}
+        expected: ${toPretty' expected}'');
     };
 
   assertFailure = expression:
@@ -79,7 +84,7 @@ in
         mkTestCase {
           inherit passed;
           failureMessage =
-            " expected an error but got the value: ${builtins.toJSON ret.value}";
+            " expected an error but got the value: ${toPretty' ret.value}";
         } // {
           inherit expression;
           __functor = self: arg:
