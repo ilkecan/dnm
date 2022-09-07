@@ -13,6 +13,7 @@ in
 
   lib ? inputs.nixpkgs.lib,
   nix-alacarte ? inputs.nix-alacarte.lib,
+  ...
 }@args:
 
 let
@@ -22,6 +23,8 @@ let
 
   args' = args // {
     inherit
+      inputs
+
       lib
       nix-alacarte
     ;
