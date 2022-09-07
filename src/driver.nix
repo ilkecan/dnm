@@ -25,30 +25,33 @@ let
 in
 
 {
-  runTests = dir: args: {
-    exclude ? [
-      "data"
-      "default.nix"
-    ],
-    name ? "tests",
-  }:
-    let
-      importTest = file:
-        import file args;
-      excludedPaths = map (filename: dir + "/${filename}") exclude;
-      files = filesOf {
-        inherit excludedPaths;
-        asAttrs = true;
-        withExtension = "nix";
-      } dir;
-      testResults = pipe files [
-        (mapAttrs (_: importTest))
-        (getTestSetResult name)
-      ];
-    in
-    ''
-      ${testResults.fmt}
+  runTests =
+    {
+      exclude ? [
+        "data"
+        "default.nix"
+      ],
+      name ? "tests",
+    }:
 
-      ${fmtTestResult testResults.stats}
-    '';
+    dir: args:
+      let
+        importTest = file:
+          import file args;
+        excludedPaths = map (filename: dir + "/${filename}") exclude;
+        files = filesOf {
+          inherit excludedPaths;
+          asAttrs = true;
+          withExtension = "nix";
+        } dir;
+        testResults = pipe files [
+          (mapAttrs (_: importTest))
+          (getTestSetResult name)
+        ];
+      in
+      ''
+        ${testResults.fmt}
+
+        ${fmtTestResult testResults.stats}
+      '';
 }
