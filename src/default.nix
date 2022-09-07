@@ -1,5 +1,15 @@
+let
+  missingDependantOf =
+    import ./../submodules/missing-dependant-of.nix/default.nix {
+      inputs = [
+        "lib"
+        "nix-alacarte"
+      ];
+    };
+in
+
 {
-  inputs ? assert false; "must be called with either 'inputs' or all of [ 'lib' 'nix-alacarte' ]",
+  inputs ? missingDependantOf.inputs,
 
   lib ? inputs.nixpkgs.lib,
   nix-alacarte ? inputs.nix-alacarte.lib,
