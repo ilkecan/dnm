@@ -46,7 +46,7 @@ in
         } dir;
         testResults = pipe files [
           (mapAttrs (_: importTest))
-          (getTestSetResult name)
+          (getTestSetResult 0 name)
         ];
       in
       ''

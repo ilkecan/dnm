@@ -13,6 +13,9 @@ let
   ;
 
   inherit (lib)
+    filterAttrs
+    hasPrefix
+    id
     imap1
     isList
     mapAttrsToList
@@ -25,30 +28,40 @@ let
   ;
 
   inherit (dnm.internal)
+    color
     fmtCounter
     fmtTestList
     fmtTestSet
-    isTestCase
     getTestSetResult
+    isTestCase
   ;
 
-  getTestCaseResult = name: test:
+  colorName = depth:
+    let
+      colorName = {
+        "1" = "yellow";
+        "2" = "blue";
+      }.${toString depth} or "";
+    in
+    color.${colorName} or id;
+
+  getTestCaseResult = depth: name: test:
     {
-      fmt = if name == null then test.fmt else "${name} ${test.fmt}";
+      fmt = if name == null then test.fmt else "${colorName depth name} ${test.fmt}";
       stats = {
         passed = boolToInt test.passed;
         total = 1;
       };
     };
 
-  getTestListResult = name: list:
+  getTestListResult = depth: name: list:
     let
       testListResults = imap1 (i: getTestCaseResult "${toString i}.") list;
       stats = pipe testListResults [
         (map (getAttr "stats"))
         (zipAttrsWith (_: sum))
       ];
-      header = "${name} ${fmtCounter stats}";
+      header = "${colorName depth name} ${fmtCounter stats}";
     in
     {
       fmt =
@@ -64,19 +77,22 @@ let
 in
 
 {
-  getTestSetResult = name: value:
+  getTestSetResult = depth: name: value:
     if isList value then
-      getTestListResult name value
+      getTestListResult depth name value
     else if isTestCase value then
-      getTestCaseResult name value
+      getTestCaseResult depth name value
     else
       let
-        testSetResults = mapAttrs getTestSetResult value;
+        testSetResults = pipe value [
+          (filterAttrs (name: _: !hasPrefix "_" name))
+          (mapAttrs (getTestSetResult (depth + 1)))
+        ];
         stats = pipe testSetResults [
           (mapAttrsToList (_: getAttr "stats"))
           (zipAttrsWith (_: sum))
         ];
-        header = "${name} ${fmtCounter stats}";
+        header = "${colorName depth name} ${fmtCounter stats}";
       in
       {
         fmt =

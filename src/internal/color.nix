@@ -7,21 +7,21 @@
 let
   inherit (lib)
     concatStrings
+    genAttrs
   ;
 
-  inherit (nix-alacarte.ansi.controlFunctions.controlSequences.SGR)
-    bold
-    green
-    red
-    reset
+  inherit (nix-alacarte.ansi.controlFunctions.controlSequences)
+    SGR
   ;
 
   boldAnd = color: msg:
-    concatStrings [ bold color msg reset ];
+    concatStrings [ SGR.bold color msg SGR.reset ];
 in
 {
-  color = {
-    green = boldAnd green;
-    red = boldAnd red;
-  };
+  color = genAttrs [
+    "blue"
+    "green"
+    "red"
+    "yellow"
+  ] (name: boldAnd SGR.${name});
 }

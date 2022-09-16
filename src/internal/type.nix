@@ -16,6 +16,5 @@ in
 
 {
   testCaseType = "test-case";
-
   isTestCase = isType testCaseType;
 }
