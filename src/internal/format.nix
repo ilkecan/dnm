@@ -1,4 +1,5 @@
 {
+  dnm,
   lib,
   nix-alacarte,
   ...
@@ -14,6 +15,10 @@ let
     indentBy
     pipe'
     unlines
+  ;
+
+  inherit (dnm.internal)
+    color
   ;
 in
 
@@ -38,6 +43,6 @@ in
   fmtTestResult = stats:
     ''
       test result:
-        ${toString stats.passed} passed
-        ${toString (stats.total - stats.passed)} failed'';
+        ${color.green "passed"}: ${toString stats.passed}
+        ${color.red "failed"}: ${toString (stats.total - stats.passed)}'';
 }

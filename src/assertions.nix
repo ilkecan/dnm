@@ -33,6 +33,7 @@ let
   ;
 
   inherit (dnm.internal)
+    color
     fmtTestList
     testCaseType
   ;
@@ -42,7 +43,7 @@ let
     {
       inherit passed;
       _type = testCaseType;
-      fmt = if passed then "passed!" else "failed!${failureMessage}";
+      fmt = if passed then (color.green "passed!") else "${color.red "failed!"}${failureMessage}";
     };
 in
 
@@ -84,7 +85,7 @@ in
         mkTestCase {
           inherit passed;
           failureMessage =
-            " expected an error but got the value: ${toPretty' ret.value}";
+            " expected an error but got a value: ${toPretty' ret.value}";
         } // {
           inherit expression;
           __functor = self: arg:
