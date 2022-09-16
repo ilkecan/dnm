@@ -3,17 +3,21 @@ Upstream-Name: dnm
 Upstream-Contact: ilkecan <ilkecan@protonmail.com>
 Source: https://github.com/ilkecan/dnm
 
-Files: *.lock
+Files:
+  *.lock
+  .gitmodules
 Copyright: 2022 ilkecan <ilkecan@protonmail.com>
 License: Unlicense
 
 Files:
+  *.editorconfig
   *.gitignore
   *.md
-  .editorconfig
+  assets/*
 Copyright: 2022 ilkecan <ilkecan@protonmail.com>
 License: CC-BY-SA-4.0
 
-Files: *.nix
+Files:
+  *.nix
 Copyright: 2022 ilkecan <ilkecan@protonmail.com>
 License: MPL-2.0
