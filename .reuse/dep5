@@ -11,6 +11,7 @@ License: Unlicense
 
 Files:
   *.editorconfig
+  *.gitattributes
   *.gitignore
   *.md
   assets/*
