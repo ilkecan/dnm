@@ -40,9 +40,9 @@ in
     unlines
   ];
 
-  fmtTestResult = stats:
+  fmtTestSummary = stats:
     ''
-      test result:
+      test summary:
         ${color.green "passed"}: ${toString stats.passed}
         ${color.red "failed"}: ${toString (stats.total - stats.passed)}'';
 }

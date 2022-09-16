@@ -19,7 +19,7 @@ let
   ;
 
   inherit (dnm.internal)
-    fmtTestResult
+    fmtTestSummary
     getTestSetResult
   ;
 in
@@ -52,6 +52,6 @@ in
       ''
         ${testResults.fmt}
 
-        ${fmtTestResult testResults.stats}
+        ${fmtTestSummary testResults.stats}
       '';
 }
