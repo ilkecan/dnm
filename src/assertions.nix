@@ -7,6 +7,7 @@
 
 let
   inherit (builtins)
+    deepSeq
     filter
     tryEval
   ;
@@ -79,7 +80,7 @@ in
     let
       f = { expression, ... }:
         let
-          ret = tryEval expression;
+          ret = tryEval (deepSeq expression expression);
           passed = !ret.success;
         in
         mkTestCase {
