@@ -6,16 +6,14 @@
 }:
 
 let
-  inherit (builtins)
-    mapAttrs
-  ;
-
   inherit (lib)
     pipe
   ;
 
   inherit (nix-alacarte)
+    attrs
     filesOf
+    list
   ;
 
   inherit (dnm.internal)
@@ -38,14 +36,14 @@ in
       let
         importTest = file:
           import file args;
-        excludedPaths = map (filename: dir + "/${filename}") exclude;
+        excludedPaths = list.map (filename: dir + "/${filename}") exclude;
         files = filesOf {
           inherit excludedPaths;
           asAttrs = true;
           withExtension = "nix";
         } dir;
         testResults = pipe files [
-          (mapAttrs (_: importTest))
+          (attrs.map (_: importTest))
           (getTestSetResult 0 name)
         ];
       in

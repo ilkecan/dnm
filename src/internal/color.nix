@@ -1,13 +1,12 @@
 {
-  lib,
   nix-alacarte,
   ...
 }:
 
 let
-  inherit (lib)
-    concatStrings
-    genAttrs
+  inherit (nix-alacarte)
+    attrs
+    string
   ;
 
   inherit (nix-alacarte.ansi.controlFunctions.controlSequences)
@@ -15,10 +14,10 @@ let
   ;
 
   boldAnd = color: msg:
-    concatStrings [ SGR.bold color msg SGR.reset ];
+    string.concat [ SGR.bold color msg SGR.reset ];
 in
 {
-  color = genAttrs [
+  color = attrs.gen [
     "blue"
     "green"
     "red"

@@ -8,7 +8,6 @@
 let
   inherit (builtins)
     deepSeq
-    filter
     tryEval
   ;
 
@@ -26,6 +25,7 @@ let
     addPrefix
     compose
     indentBy
+    list
   ;
 
   inherit (dnm)
@@ -49,12 +49,12 @@ let
 in
 
 {
-  assertAll = list:
+  assertAll = list':
     let
-      failedAssertions = pipe list [
+      failedAssertions = pipe list' [
         (imap1 (index: assertion: { inherit index assertion; }))
-        (filter (set: !set.assertion.passed))
-        (map (set: { fmt = "${toString set.index}. ${set.assertion.fmt}"; }))
+        (list.filter (set: !set.assertion.passed))
+        (list.map (set: { fmt = "${toString set.index}. ${set.assertion.fmt}"; }))
       ];
       passed = failedAssertions == [ ];
     in

@@ -6,25 +6,17 @@
 }:
 
 let
-  inherit (builtins)
-    getAttr
-    mapAttrs
-    zipAttrsWith
-  ;
-
   inherit (lib)
-    filterAttrs
     hasPrefix
     id
     imap1
-    isList
-    mapAttrsToList
     pipe
   ;
 
   inherit (nix-alacarte)
+    attrs
     boolToInt
-    sum
+    list
   ;
 
   inherit (dnm.internal)
@@ -58,8 +50,8 @@ let
     let
       testListResults = imap1 (i: getTestCaseResult "${toString i}.") list;
       stats = pipe testListResults [
-        (map (getAttr "stats"))
-        (zipAttrsWith (_: sum))
+        (list.map (attrs.get "stats"))
+        (attrs.zipWith (_: list.sum))
       ];
       header = "${colorName depth name} ${fmtCounter stats}";
     in
@@ -78,19 +70,19 @@ in
 
 {
   getTestSetResult = depth: name: value:
-    if isList value then
+    if list.is value then
       getTestListResult depth name value
     else if isTestCase value then
       getTestCaseResult depth name value
     else
       let
         testSetResults = pipe value [
-          (filterAttrs (name: _: !hasPrefix "_" name))
-          (mapAttrs (getTestSetResult (depth + 1)))
+          (attrs.filter (name: _: !hasPrefix "_" name))
+          (attrs.map (getTestSetResult (depth + 1)))
         ];
         stats = pipe testSetResults [
-          (mapAttrsToList (_: getAttr "stats"))
-          (zipAttrsWith (_: sum))
+          (attrs.mapToList (_: attrs.get "stats"))
+          (attrs.zipWith (_: list.sum))
         ];
         header = "${colorName depth name} ${fmtCounter stats}";
       in

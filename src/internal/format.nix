@@ -1,18 +1,14 @@
 {
   dnm,
-  lib,
   nix-alacarte,
   ...
 }:
 
 let
-  inherit (lib)
-    getAttr
-    mapAttrsToList
-  ;
-
   inherit (nix-alacarte)
+    attrs
     indentBy
+    list
     pipe'
     unlines
   ;
@@ -27,16 +23,16 @@ in
     "[${toString passed}/${toString total}]";
 
   fmtTestList = pipe' [
-    (map (pipe' [
-      (getAttr "fmt")
+    (list.map (pipe' [
+      (attrs.get "fmt")
       (indentBy 2)
     ]))
     unlines
   ];
 
   fmtTestSet = pipe' [
-    (mapAttrsToList (_: getAttr "fmt"))
-    (map (indentBy 2))
+    (attrs.mapToList (_: attrs.get "fmt"))
+    (list.map (indentBy 2))
     unlines
   ];
 
