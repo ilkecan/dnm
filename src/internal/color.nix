@@ -6,7 +6,7 @@
 let
   inherit (nix-alacarte)
     attrs
-    string
+    str
   ;
 
   inherit (nix-alacarte.ansi.controlFunctions.controlSequences)
@@ -14,7 +14,7 @@ let
   ;
 
   boldAnd = color: msg:
-    string.concat [ SGR.bold color msg SGR.reset ];
+    str.concat [ SGR.bold color msg SGR.reset ];
 in
 {
   color = attrs.gen [
