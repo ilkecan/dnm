@@ -22,10 +22,10 @@ let
   ;
 
   inherit (nix-alacarte)
-    addPrefix
     compose
     indentBy
     list
+    str
   ;
 
   inherit (dnm)
@@ -60,7 +60,7 @@ in
     in
     mkTestCase {
       inherit passed;
-      failureMessage = addPrefix " " ''
+      failureMessage = str.prepend " " ''
         following assertions failed:
         ${fmtTestList failedAssertions}'';
     };
@@ -71,7 +71,7 @@ in
     in
     mkTestCase {
       inherit passed;
-      failureMessage = addPrefix "\n" (indentBy 2 ''
+      failureMessage = str.prepend "\n" (indentBy 2 ''
         actual: ${toPretty' actual}
         expected: ${toPretty' expected}'');
     };
