@@ -11,21 +11,16 @@ let
     tryEval
   ;
 
-  inherit (lib)
-    imap1
-    isFunction
-    pipe
-  ;
-
   inherit (lib.generators)
     toPretty
   ;
 
   inherit (nix-alacarte)
-    compose
+    fn
     indentBy
     list
     str
+    type
   ;
 
   inherit (dnm)
@@ -51,8 +46,8 @@ in
 {
   assertAll = list':
     let
-      failedAssertions = pipe list' [
-        (imap1 (index: assertion: { inherit index assertion; }))
+      failedAssertions = fn.pipe list' [
+        (list.imap (index: assertion: { inherit index assertion; }))
         (list.filter (set: !set.assertion.passed))
         (list.map (set: { fmt = "${toString set.index}. ${set.assertion.fmt}"; }))
       ];
@@ -78,7 +73,7 @@ in
 
   assertFailure = expression:
     let
-      f = { expression, ... }:
+      fn = { expression, ... }:
         let
           ret = tryEval (deepSeq expression expression);
           passed = !ret.success;
@@ -90,10 +85,10 @@ in
         } // {
           inherit expression;
           __functor = self: arg:
-            f { expression = self.expression arg; };
+            fn { expression = self.expression arg; };
         };
     in
-    f { inherit expression; };
+    fn { inherit expression; };
 
   assertFalse = assertValue false;
   assertTrue = assertValue true;
@@ -103,8 +98,8 @@ in
   assertValue = value:
     let
       f = expression:
-        if isFunction expression then
-          compose [ f expression ]
+        if type.isFn expression then
+          fn.compose [ f expression ]
         else
           assertEqual { actual = expression; expected = value; }
         ;

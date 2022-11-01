@@ -7,9 +7,9 @@
 let
   inherit (nix-alacarte)
     attrs
+    fn
     indentBy
     list
-    pipe'
     unlines
   ;
 
@@ -22,15 +22,15 @@ in
   fmtCounter = { passed ? 0, total ? 0, ... }:
     "[${toString passed}/${toString total}]";
 
-  fmtTestList = pipe' [
-    (list.map (pipe' [
+  fmtTestList = fn.pipe' [
+    (list.map (fn.pipe' [
       (attrs.get "fmt")
       (indentBy 2)
     ]))
     unlines
   ];
 
-  fmtTestSet = pipe' [
+  fmtTestSet = fn.pipe' [
     (attrs.mapToList (_: attrs.get "fmt"))
     (list.map (indentBy 2))
     unlines
