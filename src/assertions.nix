@@ -16,6 +16,7 @@ let
   ;
 
   inherit (nix-alacarte)
+    float
     fn
     indentBy
     list
@@ -25,6 +26,8 @@ let
 
   inherit (dnm)
     assertEqual
+    assertPredicate
+    assertTrue
     assertValue
   ;
 
@@ -41,6 +44,15 @@ let
       _type = testCaseType;
       fmt = if passed then (color.green "passed!") else "${color.red "failed!"}${failureMessage}";
     };
+
+  mkRightAssociative = fn':
+    let
+      self = expression:
+        if type.isFn expression
+          then fn.compose [ self expression ]
+          else fn' expression;
+    in
+    self;
 in
 
 {
@@ -93,16 +105,14 @@ in
   assertFalse = assertValue false;
   assertTrue = assertValue true;
 
+  assertNan = assertPredicate float.isNan;
+
   assertNull = assertValue null;
 
-  assertValue = value:
-    let
-      f = expression:
-        if type.isFn expression then
-          fn.compose [ f expression ]
-        else
-          assertEqual { actual = expression; expected = value; }
-        ;
-    in
-    f;
+  assertPredicate = fn':
+    mkRightAssociative (fn.compose [ assertTrue fn' ]);
+
+  assertValue = value: mkRightAssociative (expression:
+    assertEqual { actual = expression; expected = value; }
+  );
 }
